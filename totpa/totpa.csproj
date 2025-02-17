@@ -12,7 +12,6 @@
 		<Authors>Paul Liubchenko</Authors>
 		<!--<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>-->
 		<Description>A simple TOTP CLI tool</Description>
-		<
 	</PropertyGroup>
 
 	<ItemGroup>
