@@ -1,0 +1,24 @@
+{
+  "profiles": {
+    "totpa_settings": {
+      "commandName": "Project",
+      "commandLineArgs": "settings -t json"
+    },
+    "totpa_list": {
+      "commandName": "Project",
+      "commandLineArgs": "list"
+    },
+    "totpa_get": {
+      "commandName": "Project",
+      "commandLineArgs": "get -n test"
+    },
+    "totpa_add": {
+      "commandName": "Project",
+      "commandLineArgs": "add -n test -u otpauth://totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "commandLineArgs": "add -n test -u otpauth://totp/Example:alice@google.com?secret=JBSWY3DPEHPK3PXP&issuer=Example"
+    }
+  }
+}
