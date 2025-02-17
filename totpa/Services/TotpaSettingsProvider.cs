@@ -44,4 +44,9 @@ class TotpaSettingsProvider : ITotpaSettingsProvider
 		File.WriteAllText(SettingsFile, JsonSerializer.Serialize(settings));
 		Console.WriteLine($"Storage type set to: {storageType}");
 	}
+
+	public string ReadConnectionString()
+	{
+		return string.Empty;
+	}
 }

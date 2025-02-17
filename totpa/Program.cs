@@ -98,6 +98,10 @@ internal class Program
 
 	private static async Task storage(string t)
 	{
+		if(t.Equals("wmi", StringComparison.InvariantCultureIgnoreCase))
+		{
+			Check.IsWindows();
+		}
 		_settingsProvider.SaveStorage(t);
 		await Task.CompletedTask;
 	}
@@ -110,6 +114,9 @@ internal class Program
 		{
 			"json" => new JsonTotpaRepository(),
 			"sqlite" => new SQLiteTotpaRepository(),
+			"sql" => new SqlTotpaRepository(_settingsProvider.ReadConnectionString()),
+			"redis" => new RedisTotpaRepository(_settingsProvider.ReadConnectionString()),
+			"wmi" => new WmiTotpaRepository(),
 			_ => new JsonTotpaRepository()
 		};
 	}

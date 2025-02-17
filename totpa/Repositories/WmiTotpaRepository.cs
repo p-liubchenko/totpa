@@ -1,7 +1,9 @@
 ﻿using System.Management;
+using System.Runtime.InteropServices;
 
 namespace totpa.Repositories;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "<Pending>")]
 public class WmiTotpaRepository : ITotpaRepository
 {
 	private const string Namespace = "root\\CIMV2";
@@ -9,10 +11,11 @@ public class WmiTotpaRepository : ITotpaRepository
 
 	public WmiTotpaRepository()
 	{
+		Check.IsWindows();
 		EnsureClassExists();
 	}
 
-	private void EnsureClassExists()
+	private static void EnsureClassExists()
 	{
 		var scope = new ManagementScope($"\\\\.\\{Namespace}");
 		scope.Connect();
@@ -27,6 +30,7 @@ public class WmiTotpaRepository : ITotpaRepository
 
 	public void AddAccount(string name, string url)
 	{
+		Check.IsWindows();
 		var scope = new ManagementScope($"\\\\.\\{Namespace}");
 		scope.Connect();
 		using var managementClass = new ManagementClass(scope, new ManagementPath(ClassName), null);
@@ -40,6 +44,7 @@ public class WmiTotpaRepository : ITotpaRepository
 
 	public Dictionary<string, string> GetAccounts()
 	{
+		Check.IsWindows();
 		var accounts = new Dictionary<string, string>();
 		var scope = new ManagementScope($"\\\\.\\{Namespace}");
 		scope.Connect();
@@ -53,6 +58,7 @@ public class WmiTotpaRepository : ITotpaRepository
 
 	public string GetAccount(string name)
 	{
+		Check.IsWindows();
 		var scope = new ManagementScope($"\\\\.\\{Namespace}");
 		scope.Connect();
 		using var searcher = new ManagementObjectSearcher(scope, new ObjectQuery($"SELECT Url FROM {ClassName} WHERE Name = '{name}'"));
