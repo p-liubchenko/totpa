@@ -75,7 +75,7 @@ This project is licensed under the MIT License. See the `LICENSE.txt` file for d
 Feel free to open issues or submit pull requests to improve `totpa`. Feedback is always welcome!
 
 ## Author
-Developed by **Your Name**
+Developed by **Paul**
 
 ## Support
 For questions, reach out via GitHub issues or email.
