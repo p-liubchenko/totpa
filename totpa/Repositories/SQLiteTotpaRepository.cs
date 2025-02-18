@@ -2,7 +2,7 @@
 
 namespace totpa.Repositories;
 
-public class SQLiteTotpaRepository : ITotpaRepository
+public class SQLiteTotpaRepository : ITotpaRepository, ITotpaRepositorySettings
 {
 	private readonly string _dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".totpa/totpa.db");
 
@@ -49,5 +49,15 @@ public class SQLiteTotpaRepository : ITotpaRepository
 		using var cmd = new SqliteCommand("SELECT Url FROM TotpAccounts WHERE Name = @Name;", conn);
 		cmd.Parameters.AddWithValue("@Name", name);
 		return cmd.ExecuteScalar()?.ToString() ?? string.Empty;
+	}
+
+	public static bool ValidateSettings(Dictionary<string, string> settings)
+	{
+		return settings.ContainsKey("dbPath");
+	}
+
+	public static Dictionary<string, string> ParseSettings(string rawSettings)
+	{
+		return rawSettings.Split(';').Select(s => s.Split('=')).ToDictionary(s => s[0], s => s[1]);
 	}
 }

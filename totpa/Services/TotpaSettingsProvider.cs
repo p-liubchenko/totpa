@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 
+using totpa.Models;
+
 namespace totpa.Services;
 
 class TotpaSettingsProvider : ITotpaSettingsProvider
@@ -20,29 +22,33 @@ class TotpaSettingsProvider : ITotpaSettingsProvider
 		}
 		if (!File.Exists(SettingsFile))
 		{
-			File.WriteAllText(SettingsFile, JsonSerializer.Serialize(new Dictionary<string, string>()));
+			File.WriteAllText(SettingsFile, JsonSerializer.Serialize(new TotpaSettings()));
 		}
+	}
+
+	public TotpaSettings LoadSettings()
+	{
+		if (!File.Exists(SettingsFile)) return new TotpaSettings();
+		return JsonSerializer.Deserialize<TotpaSettings>(File.ReadAllText(SettingsFile)) ?? new TotpaSettings();
+	}
+
+	public void SaveSettings(TotpaSettings settings)
+	{
+		File.WriteAllText(SettingsFile, JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true }));
 	}
 
 	public string GetStorageType()
 	{
-		if (File.Exists(SettingsFile))
-		{
-			var settings = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(SettingsFile));
+		var settings = LoadSettings();
 
-			if (settings != null && settings.ContainsKey("storage"))
-			{
-				return settings["storage"];
-			}
-		}
-		return string.Empty;
+		return settings.StorageType;
 	}
 
 	public void SaveStorage(string storageType)
 	{
-		var settings = new Dictionary<string, string> { { "storage", storageType } };
-		File.WriteAllText(SettingsFile, JsonSerializer.Serialize(settings));
-		Console.WriteLine($"Storage type set to: {storageType}");
+		var settings = LoadSettings();
+		settings.StorageType = storageType;
+		SaveSettings(settings);
 	}
 
 	public string ReadConnectionString()

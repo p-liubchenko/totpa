@@ -17,7 +17,7 @@ internal class Program
 	static async Task Main(string[] args)
 	{
 		_settingsProvider = new TotpaSettingsProvider();
-		
+
 		var rootCommand = new RootCommand("TOTP CLI tool");
 
 		var addCommand = new Command("add", "Add a new TOTP account")
@@ -37,10 +37,12 @@ internal class Program
 
 		var getCommand = new Command("get", "Generate a TOTP code")
 		{
-			new Option<string>("-n", "Unique name for the account")
+			new Option<string>("-n", "Unique name for the account") { IsRequired = true},
+			new Option<bool>("-h", "Show human-friendly info") { IsRequired = false }
 		};
 		getCommand.SetHandler(async (context) => await get(
-			context.ParseResult.GetValueForOption(getCommand.Options[0] as Option<string>)
+			context.ParseResult.GetValueForOption(getCommand.Options[0] as Option<string>),
+			context.ParseResult.GetValueForOption(getCommand.Options[1] as Option<bool>)
 		));
 		rootCommand.AddCommand(getCommand);
 
@@ -73,7 +75,7 @@ internal class Program
 		await Task.CompletedTask;
 	}
 
-	private static async Task get(string n)
+	private static async Task get(string n, bool humanFriendly)
 	{
 		_repository = InitializeRepository();
 		var totpUrl = _repository.GetAccount(n);
@@ -92,13 +94,20 @@ internal class Program
 
 		var secretBytes = Base32Encoding.ToBytes(secret);
 		var totp = new Totp(secretBytes);
-		Console.WriteLine($"Generated TOTP Code for {n}: {totp.ComputeTotp()} (expires in {totp.RemainingSeconds()})");
+		if (humanFriendly)
+		{
+			Console.WriteLine($"Generated TOTP Code for {n}: {totp.ComputeTotp()} (expires in {totp.RemainingSeconds()})");
+		}
+		else
+		{
+			Console.WriteLine(totp.ComputeTotp());
+		}
 		await Task.CompletedTask;
 	}
 
 	private static async Task storage(string t)
 	{
-		if(t.Equals("wmi", StringComparison.InvariantCultureIgnoreCase))
+		if (t.Equals("wmi", StringComparison.InvariantCultureIgnoreCase))
 		{
 			Check.IsWindows();
 		}
