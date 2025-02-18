@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "totpa.Email": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}
