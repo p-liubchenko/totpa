@@ -75,8 +75,13 @@ internal class Program
 		await Task.CompletedTask;
 	}
 
-	private static async Task get(string n, bool humanFriendly)
+	private static async Task get(string? n, bool humanFriendly)
 	{
+		if (string.IsNullOrEmpty(n))
+		{
+			Console.WriteLine("Error: Account name is required.");
+			return;
+		}
 		_repository = InitializeRepository();
 		var totpUrl = _repository.GetAccount(n);
 		if (string.IsNullOrEmpty(totpUrl))
